@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>USAA Announcement</title>
+    <script src = 'https://code.jquery.com/jquery-3.4.1.min.js'></script>
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <link rel="icon" href="https://content.usaa.com/mcontent/static_assets/Media/usaaicon.ico">
+
+</head>
+ 
+<style>
+
+</style>
+
+<script>
+     var textToUse;
+    function summarization()
+    {
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "https://api.meaningcloud.com/summarization-1.0",
+            "method": "POST",
+            "headers": 
+            {
+            "content-type": "application/x-www-form-urlencoded"
+            },
+            "data": 
+            {
+            "key": "59f5130e97de404893a5bf72eafec3e5",
+            "txt": document.getElementById("inputText").value,
+            "url": "YOUR_URL_VALUE",
+            "doc": "YOUR_DOC_VALUE",
+            "sentences": $("#sentenceSelect :selected").val()
+            }
+        }
+
+
+
+
+            $.ajax(settings).done(function (response) 
+            
+            {
+                var e = JSON.stringify(response.summary);
+
+                document.getElementById("output").innerHTML = JSON.parse(e);
+                var s = document.getElementById("output").innerHTML;
+                document.getElementById("facebookPreviewId").innerHTML = JSON.parse(e);
+                var s = document.getElementById("facebookPreviewId").innerHTML;
+                document.getElementById("linkedinPreviewId").innerHTML = JSON.parse(e);
+                var s = document.getElementById("linkedinPreviewId").innerHTML;
+                textToUse=s;
+                // twitter();
+                copyToClip();
+            });
+
+        var twitterSettings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "https://api.meaningcloud.com/summarization-1.0",
+            "method": "POST",
+            "headers": 
+            {
+            "content-type": "application/x-www-form-urlencoded"
+            },
+            "data": 
+            {
+            "key": "59f5130e97de404893a5bf72eafec3e5",
+            "txt": document.getElementById("inputText").value,
+            "url": "YOUR_URL_VALUE",
+            "doc": "YOUR_DOC_VALUE",
+            "sentences": 1
+            }
+        }
+            $.ajax(twitterSettings).done(function (response)
+            {
+                var e = JSON.stringify(response.summary);
+
+                document.getElementById("twitterPreviewId").innerHTML = JSON.parse(e);
+                var t = document.getElementById("twitterPreviewId").innerHTML;
+                twitterSummary=t;
+                twitter();
+            });
+        }
+
+    function clearContents(element)
+    {
+        element.value = '';
+    }          
+    
+
+    function twitter()
+    {
+        tweet.addEventListener('click',function()
+        {
+            document.getElementsByClassName('twitter-share-button')[0].setAttribute("data-text", textToUse);
+        });
+    }
+
+
+    function copyToClip()
+    {
+        var copyText = document.getElementById("output").innerHTML;
+        var textArea = document.createElement("textArea");
+        textArea.value = copyText;
+        // textArea.value = copyText.textContent;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand("Copy");
+        textArea.style.display = "none";
+        alert(textArea.value + " has been copied!");
+    }
+
+  
+</script>
+<body>
+    <!-- <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v5.0"></script> -->
+    <h1>
+        USAA Announcement Generator 
+    </h1>
+
+    <h2>
+        Announcement:
+    </h2>
+    <div name="inputArea" class="inputArea">
+        <textarea name="inputText" id="inputText" cols="100" rows="20" onclick="clearContents(this)" onchange="name=this.value;">Enter your announcement</textarea>
+    </div>
+
+    <div name="selectArea" class="dropDown">
+       Number of Sentences: <select id="sentenceSelect" required>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+    </div>
+
+    <div class="center">
+        <button id="submit" name="submitButton" onclick="summarization()" value="submit">Summarize!</button>
+    </div>
+
+    <div id = logOutput class="center">
+        <p id="output" class="center" value="this"></p>
+    </div>
+
+    <div id="socialMedia" class="center">
+    </div>
+    
+    <h2>Twitter Summary:</h2>
+    <p id="twitterPreviewId" class="center" value="twitterSummary"></p>
+    <script type="text/javascript" src="http://platform.twitter.com/widgets.js"></script>
+    <a href="http://twitter.com/share" id="tweet" class="twitter-share-button" data-size="large" data-url="http://bit.ly/34pKaVh" data-hashtags="USAA" data-related="ASU,USAA" onclick="javascript:window.open(this.href, '', 'menubar=no,
+    toolbar=no, resizable=yes, scrollbars=yes, height=600, width=600');return false">Tweet</a>
+
+    <div id="fb-root"></div>
+    <h2>Facebook Summary:</h2>
+    <p id="facebookPreviewId" class="center" value="this"></p>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v5.0"></script>
+    <div class="fb-share-button" data-href="https://communities.usaa.com/t5/Press-Releases/Sesame-Workshop-USAA-and-the-Bob-Woodruff-Foundation-work/ba-p/216446" data-layout="button" data-text="This is the announcement" data-size="large"><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse" class="fb-xfbml-parse-ignore">Share</a></div>    </div>
+    <div></div>
+    <!-- <object type="text/html" class="center" id="facebookPreviewId" data="this"></object> -->
+    <div>
+    <h2>linkedin Summary:</h2>
+
+    <p id="linkedinPreviewId" class="center" value="this"></p>
+    <script src="https://platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+    <script type="In/Share" data-url="https://communities.usaa.com/t5/Press-Releases/Sesame-Workshop-USAA-and-the-Bob-Woodruff-Foundation-work/ba-p/216446"></script>
+        
+</div>    
+
+<!-- <script src="https://account.snatchbot.me/script.js"></script><script>window.sntchChat.Init(76493)</script>  -->
+
+</body>
+<footer> 
+    <a href="usaacom.html">USAA.com</a>
+</footer>
+</html>
+
+
+
+<!-- 
+    
+When a parent or relative needs care during a long-term illness or injury, the whole family becomes part of the caregiving picture – even young children. In the United States, 3.4 million people with children provide care for a chronically ill, wounded, or injured veteran or military serviceperson; another 4.5 million civilians with children also care for disabled, aging, or chronically ill relatives. Despite the growing numbers of families in caregiving roles, very few resources exist to help little ones understand the changes caregiving can bring to their day-to-day lives. Sesame Workshop and USAA today announced Sesame Street for Military Families: Caregiving, a new initiative to support military and veteran families as they care for a wounded, ill, or injured parent or relative. Additional support for the initiative is provided by the Bob Woodruff Foundation.
+ 
+“Coming home from a deployment with visible or invisible injuries is a huge challenge for any servicemember or veteran – especially those with young families,” said Sherrie Westin, President of Social Impact and Philanthropy at Sesame Workshop, the nonprofit educational organization behind Sesame Street. “Even beyond the military community, the reality is that most of us will serve as caregivers at some point in our lives. With this initiative, we want every caregiving parent and child to know that they’re not alone, and that asking for help is always a brave thing to do.”
+ 
+With a host of research-based resources – including videos starring the Sesame Street Muppets – Sesame Street for Military Families: Caregiving addresses the specific challenges of family-based care from a child’s perspective. The initiative was designed to help children understand: why their parent may look or act differently than “before”; how to safely express complicated or confusing feelings; how their parent’s illness or injury can change over time; and how to describe their family’s new situation to themselves and others. For adults, the initiative offers guidance on “re-learning” how to parent while needing care or filling a new caregiver role.
+ 
+The child-facing resources in Sesame Street for Military Families: Caregiving use the weather – something even very young children understand – as a metaphor to explain the ups and downs of caregiving and recovery. On “sunny days,” kids and parents feel confident, safe, and happy spending time together. “Cloudy days” have small challenges related to the parent’s injury or recovery, like missing a planned outing.  On “stormy days,” children may worry about the future and have trouble accepting the family’s new normal.
+ 
+ “USAA is here for military families through all of life’s major events,” said Stuart Parker, CEO of USAA. “We are grateful to Sesame Workshop for creating resources that help kids and parents feel strong and supported in the everyday challenges they face.”
+
+
+-->
